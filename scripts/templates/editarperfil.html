@@ -1,0 +1,132 @@
+{% extends 'perfil.html' %}
+
+{% block form_editar_perfil %}
+
+    <div class="container">
+
+        <!-- Formulário de alterar perfil -->
+        <form method="post" action="" class="border mt-5 p-5" enctype="multipart/form-data">
+        <!-- method="post" permite o envio de informações -->
+        <!-- action="" define uma ação que será executada ao envio do formulário -->
+        <!-- enctype="multipart/form-data" deve ser inserido para que a validação do campo para inserir arquivos funcione, é como se fosse uma criptografia -->
+
+            <!-- Gerar segurança para o formulário -->
+            {{ formedit.csrf_token }}
+
+            <!-- Caixa para campos do formulário -->
+            <fieldset>
+
+                <div class="form-group">
+
+                    {{ formedit.foto_perfil.label }}
+                    {{ formedit.foto_perfil(class='form-control-file') }}
+
+                    {% if formedit.foto_perfil.errors %}
+
+                        {% for erro in formedit.foto_perfil.errors %}
+
+                            <span class="text-danger">{{erro}}</span>
+                            <br>
+
+                        {% endfor %}
+
+                    {% endif %}
+
+                </div>
+
+                <!-- Campo de e-mail -->
+                <div class="form-group">
+                    
+                    {{ formedit.email.label(class="form-control-label") }}
+                    <!-- formedit.email.label(classe bootstrap) - Puxa o label do campo definido no formulário python -->
+
+                    <!-- Se houver erro do tipo de entrada no campo... -->
+                    <!-- Para que o erro seja estilizado da maneira correta, deve-se inserir a estilização bootstrap para o campo de entrada (is-invalid) e para a menssagem de erro(invalid-feedback). Caso somente uma dessas opções seja configurada essa estilização pode não funcionar -->
+                    <!-- O erro é validado pela biblioteca wtforms.validators -->
+                    {% if formedit.email.errors %}
+                    <!-- formedit.email.errors busca os erros de preenchimento do campo -->
+
+                        {{ formedit.email(class="form-control is-invalid") }}
+                        <!-- formedit.email(classe bootstrap) - Puxa o campo de entrada definido no formulário python COM ERRO -->
+
+                        <div class="invalid-feedback">
+
+                            <!-- exibir erro -->
+                            {% for erro in formedit.email.errors %}
+                            
+                                {{ erro }}
+
+                            {% endfor %}
+
+                        </div>
+
+                     <!-- Se não houver erro exibe normalmente -->
+                     {% else %}
+                        
+                        {{ formedit.email(class="form-control") }}
+                        <!-- formedit.email(classe bootstrap) - Puxa o campo de entrada definido no formulário python SEM ERRO -->
+
+                    {% endif %}
+                </div>
+
+                <!-- Campo de username -->
+                <div class="form-group">
+
+                    {{ formedit.username.label(class="form-control-label") }}
+
+                    {% if formedit.username.errors %}
+
+                        {{ formedit.username(class="form-control is-invalid") }}
+
+                        <div class="invalid-feedback">
+                            {% for erro in formedit.username.errors %}
+                                {{ erro }}
+                            {% endfor %}
+                        </div>
+
+                        {% else %}
+
+                        {{ formedit.username(class="form-control") }}
+
+                    {% endif %}
+                </div>
+
+                <hr>
+
+                <p>Cursos</p>
+
+                <!-- Um formulário é um objeto iteravél que ao percorre-lo nos retorna os campos definidos nele -->
+                {% for campo in formedit %}
+
+                    <!-- Se no nome do campo conter "curso_" ele será exibido -->
+                    {% if 'curso_' in campo.name %}
+
+                        <!-- Campo de checkbox -->
+                        <div class="form-group">
+
+                            {{ campo(class="form-check-input") }}
+                            {{ campo.label(class="form-check-label") }}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}          
+
+                <hr>
+
+            </fieldset>
+            
+
+            <!-- Botão subimit login -->
+            <div>
+                {{ formedit.botao_submit_edit(class="btn btn-primary mt-2") }}
+            </div>
+
+        </form>
+
+    </div>
+
+    
+
+{% endblock %}

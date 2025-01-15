@@ -1,0 +1,154 @@
+<!-- Importar arquivo HMTL para ser considerado com base -->
+{% extends 'base.html' %}
+
+
+{% block body %}
+
+    <div class="row border mt-4 p-3 meupost">
+
+        <!-- Imagem -->
+        <div class="col col-3">
+
+            <!-- Foto Perfil -->
+            <div class="image pe-2">
+                <img src="{{ url_for('static', filename='FotoPerfil/{}'.format(postHTML.autor.foto_perfil)) }}" class="rounded" width="160" >
+            </div>
+
+            <div class="row justify-content-center" style="text-align: center;">
+
+                <!-- percorrer cursos para exibir -->
+                {% for curso in postHTML.autor.cursos.split(';') %}
+
+                    <!-- caixa com nome do curso -->
+                    <button type="button" class="btn btn-success mt-2" disabled>{{curso}}</button>
+                
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        <!-- Post -->
+        <div class="col col-9">
+
+            <!-- Título do post -->
+            <h3>
+                {{ postHTML.titulo }} 
+                <span class="text-muted" style="font-size: 15px;"> - Data de criação: {{ postHTML.data_criacao.strftime('%d/%m/%Y') }}</span>
+                <!-- .strftime('%d/%m/%Y') -> transforma a data em string alterando a formatação -->
+
+                <!-- Se o forumlário de edição existir significa que o usuário atual é o autor do popst que está sendo acessado, então iremos apresentar: -->
+                {% if formeditarpost %}
+
+                    <span class="text-muted" style="font-size: 15px;">
+                        - 
+                        <!-- Botão para editar -->
+                        <a href="#form" style="text-decoration: none;">Editar</a>
+                         | 
+                        <!-- Botão de excluir -->
+                        <a href="#" class="text-danger" style="text-decoration: none;" data-bs-toggle="modal" data-bs-target="#excluir-post">Excluir</a>
+                        <!-- data-bs-target="#excluir-post" -> aciona o pop-up com id = excluirpost no final deste arquivo html -->
+                    </span>
+
+                {% endif %}
+
+            </h3>
+
+            <!-- Corpo do post -->
+            <p>{{ postHTML.corpo }}</p>
+        </div>
+
+    </div>
+
+    <!-- Se existir formulário para editar post -->
+    {% if formeditarpost %}
+
+        <div class="container">
+
+            <!-- Formulário de editar post -->
+            <form method="post" action="" class="border mt-5 p-5" id="form">
+            <!-- method="post" permite o envio de informações -->
+            <!-- action="" define uma ação que será executada ao envio do formulário -->
+
+                <!-- Gerar segurança para o formulário -->
+                {{ formeditarpost.csrf_token }}
+
+                <!-- titulo do formulario -->
+                <legend>Editar post</legend>
+
+                <!-- Caixa para campos do formulário -->
+                <fieldset>
+
+                    <!-- Campo de Título -->
+                    <div class="form-group">
+                        
+                        {{ formeditarpost.titulo.label(class="form-control-label") }}
+                        <!-- formeditarpost.titulo.label(classe bootstrap) - Puxa o label do campo definido no formulário python -->
+
+                        {{ formeditarpost.titulo(class="form-control") }}
+                        <!-- formeditarpost.titulo(classe bootstrap) - Puxa o campo de entrada definido no formulário python SEM ERRO -->
+
+                    </div>
+
+                    <!-- Campo de corpo -->
+                    <div class="form-group">
+
+                        {{ formeditarpost.corpo.label(class="form-control-label") }}
+                        {{ formeditarpost.corpo(class="form-control") }}
+
+                    </div>
+
+                </fieldset>
+                
+
+                <!-- Botão subimit login -->
+                <div>
+                    {{ formeditarpost.botao_submit_post(class="btn btn-primary mt-2") }}
+                </div>
+
+            </form>
+
+        </div>
+
+    {% endif %}
+  
+    <!-- Modal -> pop-up para confirmação de exclusão -->
+    <div class="modal fade" id="excluir-post">
+    <!-- class="modal fade" mantém o pop-up oculto -->
+
+        <!-- Caixa do pop-up -->
+        <div class="modal-dialog">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <!-- Título do pop-up -->
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <!-- Boptão para fechar o pop-up -->
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- Conteúdo do pop-up -->
+                    Realmente deseja excluir esse post?
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+
+                    <!-- Colocar apenas o botão do pop-up de excluir dentro de um formulário para acionar a rota de exclusão do post -->
+                    <form method="POST" action="{{ url_for('excluir_post', post_id=postHTML.id) }}">
+                        <!-- Para valer o envio desse formulário ao clicar no botão, alteramos o type "button" para "submit" -->
+                        <button type="submit" class="btn btn-danger">Sim, excluir</button>
+                    </form>
+                    
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

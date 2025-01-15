@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+    <!-- Integrando CSS de um template pronto de perfil do site https://bbbootstrap.com/snippets/bootstrap-sidebar-user-profile-62301382 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+{% endblock %}
+
+{% block body %}
+
+    <!-- Cabeçalho do perfil -->
+    <div class="container mt-5 d-flex justify-content-center">
+
+        <!-- Bloco de informações do perfil -->
+        <div class="card p-3">
+
+            <!-- Mantendo imagem e demais informações na mesma linha -->
+            <div class="d-flex">
+
+                <!-- Foto Perfil -->
+                <div class="image pe-2">
+                    <img src="{{ url_for('static', filename='FotoPerfil/{}'.format(current_user.foto_perfil)) }}" class="rounded" width="160" >
+                </div>
+
+                <!-- Demais informações -->
+                <div class="ml-3 w-100">
+                
+                    <!-- Nome e e-mail do perfil -->
+                    <h4 class="mb-0 mt-0">{{ current_user.username }}</h4>
+                    <span>{{ current_user.email }}</span>
+
+                    <!-- Caixa para quantidade de cursos e posts -->
+                    <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+
+                        <!-- Quantidade de cursos -->
+                        <div class="d-flex flex-column">
+
+                            <span class="rating">Cursos</span>
+
+                                <!-- O "Não informado" é um valor default definido no models.py, ou seja, mesmo se o usuário não selecionar nenhum curso, ainda iria aparecer a conta como 1. Então se existir essa string a contagem será 0 -->
+                                {% if 'Não informado' in current_user.cursos %}
+                                
+                                    0
+
+                                 {% else %}
+
+                                    {{ current_user.cursos.count(';') +1 }}
+                                    <!-- urrent_user.cursos.count(;) + 1 -> como os cursos são upados no banco de dados como uma string separando cadas curso por ";", então irmeos contar a quantidade de ponto e vírgula e somar 1, pois no final do último curso não tem ";" --> 
+
+                                {% endif %}
+                            
+                            
+                        </div>
+
+                        <!-- Quantidade de posts -->
+                        <div class="d-flex flex-column">
+
+                            <span class="rating">Posts</span>
+                            <span class="number2">{{ current_user.contar_posts() }}</span>
+                            
+                        </div>
+                    
+                    </div>
+
+                    <!-- Botão para edição do perfil -->
+                    <div class="button mt-2 d-flex flex-row">
+
+                        <a class="w-100" href="{{ url_for('editar_perfil') }}">
+
+                            <button class="btn btn-sm btn-outline-primary w-100">Editar perfil</button>
+
+                        </a>
+                    
+                    </div>
+
+                </div>
+
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <hr>
+
+    <!-- Bloco de apresentação dos cursos que o usuário tem -->
+    <div class="row justify-content-center" style="text-align: center;">
+
+        <h1>Cursos</h1>
+
+        <!-- Colunas para as caixas com os nomes dos curso -->
+        <div class="col col-5">
+
+            <!-- percorrer cursos para exibir -->
+            {% for curso in current_user.cursos.split(';') %}
+
+                <!-- caixa com nome do curso -->
+                <button type="button" class="btn btn-success disable mt-2">{{curso}}</button>
+            
+            {% endfor %}
+
+        </div>
+    </div>
+    
+
+    {% block form_editar_perfil %}
+    {% endblock %}
+
+{% endblock %}

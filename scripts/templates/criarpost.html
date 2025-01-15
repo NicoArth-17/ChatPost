@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="container">
+
+        <!-- Formulário de criar post -->
+        <form method="post" action="" class="border mt-5 p-5">
+        <!-- method="post" permite o envio de informações -->
+        <!-- action="" define uma ação que será executada ao envio do formulário -->
+
+            <!-- Gerar segurança para o formulário -->
+            {{ formpost.csrf_token }}
+
+            <!-- titulo do formulario -->
+             <legend>Crair post</legend>
+
+            <!-- Caixa para campos do formulário -->
+            <fieldset>
+
+                <!-- Campo de Título -->
+                <div class="form-group">
+                    
+                    {{ formpost.titulo.label(class="form-control-label") }}
+                    <!-- formpost.titulo.label(classe bootstrap) - Puxa o label do campo definido no formulário python -->
+
+                    {{ formpost.titulo(class="form-control") }}
+                    <!-- formpost.titulo(classe bootstrap) - Puxa o campo de entrada definido no formulário python SEM ERRO -->
+
+                </div>
+
+                <!-- Campo de corpo -->
+                <div class="form-group">
+
+                    {{ formpost.corpo.label(class="form-control-label") }}
+                    {{ formpost.corpo(class="form-control") }}
+
+                </div>
+
+            </fieldset>
+            
+
+            <!-- Botão subimit login -->
+            <div>
+                {{ formpost.botao_submit_post(class="btn btn-primary mt-2") }}
+            </div>
+
+        </form>
+
+    </div>
+
+{% endblock %}

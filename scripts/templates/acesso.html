@@ -1,0 +1,216 @@
+<!-- Faz deste arquivo uma extensão de um arquivo base -->
+{% extends 'base.html' %}
+
+<!-- Bloco body que será editado/inserido no arquivo extends (base.html) -->
+{% block body %}
+
+    <!-- Caixa para todo conteúdo do body -->
+    <div class="container">
+
+        <!-- Colocando todas as caixas alinhadas -->
+        <div class="row">
+
+            <!-- Coluna 1 da página -->
+            <div class="col">
+
+                <!-- Formulário de Login -->
+                <form method="post" action="" class="border mt-5 p-5">
+                <!-- method="post" permite o envio de informações -->
+                <!-- action="" define uma ação que será executada ao envio do formulário -->
+
+                    <!-- Gerar segurança para o formulário -->
+                    {{ formlogin.csrf_token }}
+
+                    <!-- Título do formulário -->
+                    <legend>Login</legend>
+
+                    <hr>
+
+                    <!-- Caixa para campos do formulário -->
+                    <fieldset>
+
+                        <!-- Campo de e-mail -->
+                        <div class="form-group">
+                            
+                            {{ formlogin.email.label(class="form-control-label") }}
+                            <!-- formlogin.email.label(classe bootstrap) - Puxa o label do campo definido no formulário python -->
+
+                            <!-- Se houver erro do tipo de entrada no campo... -->
+                            <!-- Para que o erro seja estilizado da maneira correta, deve-se inserir a estilização bootstrap para o campo de entrada (is-invalid) e para a menssagem de erro(invalid-feedback). Caso somente uma dessas opções seja configurada essa estilização pode não funcionar -->
+                            <!-- O erro é validado pela biblioteca wtforms.validators -->
+                            {% if formlogin.email.errors %}
+                            <!-- formlogin.email.errors busca os erros de preenchimento do campo -->
+
+                                {{ formlogin.email(class="form-control is-invalid") }}
+                                <!-- formlogin.email(classe bootstrap) - Puxa o campo de entrada definido no formulário python COM ERRO -->
+
+                                <div class="invalid-feedback">
+
+                                    <!-- exibir erro -->
+                                    {% for erro in formlogin.email.errors %}
+                                    
+                                        {{ erro }}
+
+                                    {% endfor %}
+
+                                </div>
+
+                             <!-- Se não houver erro exibe normalmente -->
+                             {% else %}
+                                
+                                {{ formlogin.email(class="form-control") }}
+                                <!-- formlogin.email(classe bootstrap) - Puxa o campo de entrada definido no formulário python SEM ERRO -->
+
+                            {% endif %}
+                        </div>
+    
+                        <!-- Campo de senha -->
+                        <div class="form-group">
+
+                            {{ formlogin.senha.label(class="form-control-label") }}
+
+                            {% if formlogin.senha.errors %}
+
+                                {{ formlogin.senha(class="form-control is-invalid") }}
+
+                                <div class="invalid-feedback">
+                                    {% for erro in formlogin.senha.errors %}
+                                        {{ erro }}
+                                    {% endfor %}
+                                </div>
+
+                             {% else %}
+
+                                {{ formlogin.senha(class="form-control") }}
+
+                            {% endif %}
+                        </div>
+    
+                        <!-- Campo de checkbox -->
+                        <div class="form-group">
+
+                            {{ formlogin.lembrar_login(class="form-check-input") }}
+
+                            {{ formlogin.lembrar_login.label(class="form-check-label") }}
+                        </div>
+                    </fieldset>
+                    
+
+                    <!-- Botão subimit login -->
+                    <div>
+                        {{ formlogin.botao_submit_login(class="btn btn-primary mt-2") }}
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- Coluna 2 da página -->
+            <div class=col>
+
+                <!-- Formulário de Criar conta -->
+                <form method="post" action="" class="border mt-5 p-5">
+
+                <!-- Gerar segurança para o formulário -->
+                {{ formlogin.csrf_token }}
+
+                    <!-- Título do formulário -->
+                    <legend>Criar conta</legend>
+
+                    <hr>
+
+                    <fieldset>
+                        <!-- Campo de username -->
+                        <div class="form-group">
+
+                            {{ formcriarconta.username.label(class="form-control-label") }}
+
+                            {% if formcriarconta.username.errors %}
+
+                                {{ formcriarconta.username(class="form-control is-invalid") }}
+
+                                <div class="invalid-feedback">
+                                    {% for erro in formcriarconta.username.errors %}
+
+                                        {{ erro }}
+
+                                    {% endfor %}
+                                </div>
+
+                             {% else %}
+
+                                {{ formcriarconta.username(class="form-control") }}
+
+                            {% endif %}
+                        </div>
+
+                        <!-- Campo de e-mail -->
+                        <div class="form-group">
+
+                            {{ formcriarconta.email.label(class="form-control-label") }}
+
+                            {% if formcriarconta.email.errors %}
+
+                                {{ formcriarconta.email(class="form-control is-invalid") }}
+
+                                <div class="invalid-feedback">
+                                    {% for erro in formcriarconta.email.errors %}
+
+                                        {{ erro }}
+
+                                    {% endfor %}
+                                </div>
+
+                             {% else %}
+
+                                {{ formcriarconta.email(class="form-control") }}
+
+                            {% endif %}
+                        </div>
+
+                        <!-- Campo de senha -->
+                        <div class="form-group">
+
+                            {{ formcriarconta.senha.label(class="form-control-label") }}
+
+                            {% if formcriarconta.senha.errors %}
+
+                                {{ formcriarconta.senha(class="form-control is-invalid") }}
+
+                                <div class="invalid-feedback">
+                                    {% for erro in formcriarconta.senha.errors %}
+
+                                        {{ erro }}
+
+                                    {% endfor %}
+                                </div>
+
+                             {% else %}
+
+                                {{ formcriarconta.senha(class="form-control") }}
+
+                            {% endif %}
+                        </div>
+
+                        <!-- Campo de confirmação de senha -->
+                        <div class="form-group">
+
+                            {{ formcriarconta.confirmacao_senha.label(class="form-control-label") }}
+
+                            {{ formcriarconta.confirmacao_senha(class="form-control") }}
+                        </div>
+                    </fieldset>
+
+                    <!-- Botão subimit criar conta -->
+                    <div>
+                        {{ formcriarconta.botao_submit_criarconta(class="btn btn-primary mt-2") }}
+                    </div>
+
+                </form>
+
+            </div>
+            
+        </div>
+    </div>
+
+{% endblock %}

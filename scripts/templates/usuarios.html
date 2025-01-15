@@ -1,0 +1,96 @@
+<!-- Importar arquivo HMTL -->
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="container">
+        <h1>Usuários</h1>
+        {% for user in lista_usuariosHTML %}
+
+            <!-- Cabeçalho do perfil -->
+            <div class="container mt-5 d-flex justify-content-center">
+
+                <!-- Bloco de informações do perfil -->
+                <div class="card p-3">
+
+                    <!-- Mantendo imagem e demais informações na mesma linha -->
+                    <div class="d-flex">
+
+                        <!-- Foto Perfil -->
+                        <div class="image pe-2">
+                            <img src="{{ url_for('static', filename='FotoPerfil/{}'.format(user.foto_perfil)) }}" class="rounded" width="160" >
+                        </div>
+
+                        <!-- Demais informações -->
+                        <div class="ml-3 w-100">
+                        
+                            <!-- Nome e e-mail do perfil -->
+                            <h4 class="mb-0 mt-0">{{ user.username }}</h4>
+                            <span>{{ user.email }}</span>
+
+                            <!-- Caixa para quantidade de cursos e posts -->
+                            <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+
+                                <!-- Quantidade de cursos -->
+                                <div class="d-flex flex-column">
+
+                                    <span class="rating">Cursos</span>
+
+                                        <!-- O "Não informado" é um valor default definido no models.py, ou seja, mesmo se o usuário não selecionar nenhum curso, ainda iria aparecer a conta como 1. Então se existir essa string a contagem será 0 -->
+                                        {% if 'Não informado' in user.cursos %}
+                                        
+                                            0
+
+                                        {% else %}
+
+                                            {{ user.cursos.count(';') +1 }}
+                                            <!-- urrent_user.cursos.count(;) + 1 -> como os cursos são upados no banco de dados como uma string separando cadas curso por ";", então irmeos contar a quantidade de ponto e vírgula e somar 1, pois no final do último curso não tem ";" --> 
+
+                                        {% endif %}
+                                    
+                                    
+                                </div>
+
+                                <!-- Quantidade de posts -->
+                                <div class="d-flex flex-column">
+
+                                    <span class="rating">Posts</span>
+                                    <span class="number2">{{ user.contar_posts() }}</span>
+                                    
+                                </div>
+                            
+                            </div>
+
+                        </div>
+
+                    </div>
+                    
+                </div>
+
+            </div>
+
+            <!-- Bloco de apresentação dos cursos que o usuário tem -->
+            <div class="row justify-content-center" style="text-align: center;">
+
+                <h1>Cursos</h1>
+
+                <!-- Colunas para as caixas com os nomes dos curso -->
+                <div class="col col-5">
+
+                    <!-- percorrer cursos para exibir -->
+                    {% for curso in user.cursos.split(';') %}
+
+                        <!-- caixa com nome do curso -->
+                        <button type="button" class="btn btn-success mt-2" disabled>{{curso}}</button>
+                    
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        {% endfor %}
+    </div>
+
+    <footer style="margin-top: 10px;"></footer>
+
+{% endblock %}

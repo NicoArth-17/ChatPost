@@ -1,0 +1,62 @@
+<!-- Importar arquivo HMTL para ser considerado com base -->
+{% extends 'base.html' %}
+
+{% block head %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="container mt-3">
+
+        <!-- Cabeçalho -->
+        <h1>Comunidade Impressionadora</h1>
+        <h2>Foco no progresso!</h2>
+
+        <hr>
+
+        {% for post in postHTML %}
+
+            <div class="row border mt-4 p-3 meupost">
+
+                <!-- Imagem -->
+                <div class="col col-3">
+
+                    <!-- Foto Perfil -->
+                    <div class="image pe-2">
+                        <img src="{{ url_for('static', filename='FotoPerfil/{}'.format(post.autor.foto_perfil)) }}" class="rounded" width="160" >
+                    </div>
+
+                    <div class="row justify-content-center" style="text-align: center;">
+        
+                        <!-- percorrer cursos para exibir -->
+                        {% for curso in post.autor.cursos.split(';') %}
+    
+                            <!-- caixa com nome do curso -->
+                            <button type="button" class="btn btn-success mt-2" disabled>{{curso}}</button>
+                        
+                        {% endfor %}
+        
+                    </div>
+
+                </div>
+
+                <!-- Post -->
+                <div class="col col-9">
+
+                    <!-- Título do post -->
+                    <h3><a style="text-decoration: none;" href="{{ url_for('exibir_post', post_id=post.id) }}">{{ post.titulo }}</a></h3>
+
+                    <!-- Corpo do post -->
+                    <p>{{ post.corpo }}</p>
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}

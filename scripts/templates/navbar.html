@@ -1,0 +1,94 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+
+        <!-- Título -->
+      <a class="navbar-brand" href="{{ url_for('home') }}">Comunidade</a>
+      <!-- url_for('nome da função') -> busca o link da rota/página pelo nome da função, pois caso o link altere a página continua funcionando sem ter q alterar o link aqui no HTML também -->
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Se o usuário estiver logado -->
+        {% if current_user.is_authenticated %}
+        <!-- current_user pega o usuário atual -->
+        <!-- .is_authenticated verifica/autentica se o usuário está logado -->
+
+          <!-- Opções principais -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('usuarios') }}">Usuários</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('contato') }}">Contato</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('criar_post') }}">Postagem</a>
+            </li>
+
+          </ul>
+
+         <!-- Se não houver usuário logado -->
+         {% else %}
+
+          <!-- Opções principais -->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('usuarios') }}">Usuários</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('contato') }}">Contato</a>
+            </li>
+
+          </ul>
+
+        {% endif %}
+
+        <!-- Se o usuário estiver logado -->
+        {% if current_user.is_authenticated %}
+        <!-- current_user pega o usuário atual -->
+        <!-- .is_authenticated verifica/autentica se o usuário está logado -->
+
+          <!-- Opções de Perfil/sair -->
+          <ul class="navbar-nav">
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('perfil') }}">Perfil</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('sair') }}">Sair</a>
+            </li>
+
+          </ul>
+
+         <!-- Se não houver usuário logado -->
+         {% else %}
+
+          <!-- Opções de Login/Cadastro -->
+          <ul class="navbar-nav">
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('acesso') }}">Login</a>
+            </li>
+
+          </ul>
+
+        {% endif %}
+
+        
+
+      </div>
+    </div>
+  </nav>
