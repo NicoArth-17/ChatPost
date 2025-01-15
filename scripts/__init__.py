@@ -15,12 +15,20 @@ app.config['SECRET_KEY'] = '81ac584e72fc1dd6bcb2043af796889a'
 #  Definir criptografia
 bcrypt = Bcrypt(app)
 
-# Configurando local e nome do arquivo do banco de dados
-db_path = os.path.join(os.path.dirname(__file__), 'comunidade.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+ db_path
-# app.config['SQLALCHEMY_DATABASE_URI'] -> define onde o banco de dados vai se encontrar localmente
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False -> pesquisar no GPT para entender
+# Configurando local e nome do arquivo do banco de dados para rodar em ambiente teste e produtivo
+    # Se o banco de dados for encontrado na variável de ambiente DATABASE_URL do servidor Railway
+if os.getenv('DATABASE_URL'):
+    
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
+    # Se não for encontrado no servidor online, então será usado o database local
+else:
+
+    db_path = os.path.join(os.path.dirname(__file__), 'comunidade.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+ db_path
+    # app.config['SQLALCHEMY_DATABASE_URI'] -> define onde o banco de dados vai se encontrar localmente
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False -> pesquisar no GPT para entender
 
 # Criando banco de dados
 database = SQLAlchemy(app)
