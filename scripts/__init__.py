@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 import os
+import sqlalchemy
 
 
 # Criar aplicação Flask
@@ -15,20 +16,12 @@ app.config['SECRET_KEY'] = '81ac584e72fc1dd6bcb2043af796889a'
 #  Definir criptografia
 bcrypt = Bcrypt(app)
 
-# Configurando local e nome do arquivo do banco de dados para rodar em ambiente teste e produtivo
-    # Se o banco de dados for encontrado na variável de ambiente DATABASE_URL do servidor Railway
-if os.getenv('DATABASE_URL'):
-    
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-
-    # Se não for encontrado no servidor online, então será usado o database local
-else:
-
-    db_path = os.path.join(os.path.dirname(__file__), 'comunidade.db')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+ db_path
-    # app.config['SQLALCHEMY_DATABASE_URI'] -> define onde o banco de dados vai se encontrar localmente
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False -> pesquisar no GPT para entender
+# Configurando local e nome do arquivo do banco de dados
+db_path = os.path.join(os.path.dirname(__file__), 'comunidade.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+ db_path
+# app.config['SQLALCHEMY_DATABASE_URI'] -> define onde o banco de dados vai se encontrar localmente
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False -> pesquisar no GPT para entender
 
 # Criando banco de dados
 database = SQLAlchemy(app)
@@ -44,6 +37,31 @@ login_manager.login_view = 'acesso'
 
 # Personalizar menagem do login_view
 login_manager.login_message_category = 'alert-info'
+
+
+# Importar as tabelas do models para criar database no Railway
+from scripts import models
+
+# Verificar database Railway
+engine = sqlalchemy.create_engine(app.config['SQLALCHEMY_DATABASE_URI'])
+
+# Inspecionar database
+inspector = sqlalchemy.inspect(engine)
+
+# Se dentro da inspeção não tem a tabela Usuário
+if not inspector.has_table('usuario'):
+
+    with app.app_context():
+        # excluir database caso caso já existir algum que não tenha a tabela usuario
+        database.drop_all()
+        # cria o database
+        database.create_all()
+
+        print('Database created')
+
+else:
+    print('Database already exist')
+
 
 # O arquivo main.py, necessita apenas da importação do app para ser executado, que por sua vez já está vinculado ao Flask e ao SQLAlchemy (configuração do banco de dados). Porém dessa forma as rotas não serão exibidas pois não se encontram neste arquivo.
 # Com isso, logo abaixo do código importamos o arquivo de rotas, pois o app não precisa das rotas para executar e as rotas precisão ser executadas após a criação do app.
