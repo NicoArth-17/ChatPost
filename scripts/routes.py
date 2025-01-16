@@ -88,7 +88,8 @@ def acesso():
     if form_criarconta.validate_on_submit() and 'botao_submit_criarconta' in request.form:
 
         # Criptografar senha
-        senha_cript = bcrypt.generate_password_hash(form_criarconta.senha.data)
+        senha_cript = bcrypt.generate_password_hash(form_criarconta.senha.data).decode('utf-8')
+        # .decode('utf-8') -> decodificar a senha hash em utf-8 para que não gere conflito com o Railway, pois ele codifica todo dado inserido no database
 
         user = Usuario(username=form_criarconta.username.data, email=form_criarconta.email.data, senha=senha_cript)
 
